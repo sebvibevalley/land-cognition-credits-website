@@ -1,1 +1,50 @@
-aW1wb3J0IHR5cGUgeyBDb25maWcgfSBmcm9tICd0YWlsd2luZGNzcyc7CgppbXBvcnQgdHlwZSB7IENvbmZpZyB9IGZyb20gJ3RhaWx3aW5kY3NzJzsKCmNvbnN0IGNvbmZpZyA6IENvbmZpZyA9IHsKICBjb250ZW50OiBbCiAgICAiLi9zcmMvYXBwLyoqLyp7anMsdHMsanN4LHRzeCxtZHh9IiwKICAgICIuL3NyYy9jb21wb25lbnRzLyoqLyp7anMsdHMsanN4LHRzeCxtZHh9IiwKICAgICIuL3NyYy9saWIvKiovKntqcyx0cyxqc3gudHN4LG1keH0iLAogIF0sCiAgdGhlbWU6IHsKICAgIGV4dGVuZDogewogICAgICBjb2xvcnM6IHsKICAgICAgICBsYW5kOiB7CiAgICAgICAgICBiZzogJyMwODA5MEQnLAogICAgICAgICAgc3VyZmFjZTogJyMwRTExMTcnLAogICAgICAgICAgYm9yZGVyOiAnIzFEMjMzMCcLAogICAgICAgICAgcHJpbWFyeTogJyM0RUNTRkYnLAogICAgICAgICAgc2Vjb25kYXJ5OiAnIzlFNjZGRicnLAogICAgICAgICAgc3VjY2VzczogJyMwMEZGN0EnLAogICAgICAgICAgYWNjZW50OiAnI0ZGRD EyRScsCiAgICAgICAgICBtdXRlZDogJyM5Q0EzQUYnLAogICAgICAgIH0sCiAgICAgIH0sCiAgICAgIGZvbnRGYW1pbHk6IHsKICAgICAgICBzYW5zOiBbJ3ZhcigtLWZvbnQtaW50ZXIpJywgJ0ludGVyJywgJ3NhbnMtc2VyaWYnXSwKICAgICAgICBkaXNwbGF5OiBbJ3ZhcigtLWZvbnQtbW9udHNlcnJhdCknLCAnTW9udHNlcnJhdCcsICdhbnNhLXNlcmlmJ10sCiAgICAgICAgYnJhbmQ6IFsndmFyKC0tZm9udC1wb3BwaW5zKScsICdQb3BwaW5zJywgJ2Fuc2Etc2VyaWYnXSwKICAgICAgfSwKICAgICAgYmFja2dyb3VuZEltYWdlOiB7CiAgICAgICAgJ2dyYWRpZW50LXByaW1hcnknOiAnbGluZWFyLWdyYWRpZW50KDEzNWRlZywgIzRFQzNGRiAwJSwgIzlFNjZGRiAxMDAlKScsCiAgICAgICAgJ2dyYWRpZW50LXJhZGlhbC1oZXJvJzoKICAgICAgICAgICdyYWRpYWwtZ3JhZGllbnQoY2lyY2xlIGF0IHRvcCwgcmdiYSg3OCwgMTk1LCAyNTUsIDAuMTYpLCB0cmFuc3BhcmVudCAzMjUpLCByYWRpYWwtZ3JhZGllbnQoY2lyY2xlIGF0IDgwJSAyMCUsIHJnYmEoMTU4LCAxMDIsIDI1NSwgMC4xOCksIHRyYW5zcGFyZW50IDI4JSknLAogICAgICAgICdyYWRpYWwtbWVzaCc6CiAgICAgICAgICAncmFkaWFsLWdyYWRpZW50KGNpcmNsZSBhdCAyMCUgMjAlLCByZ2JhKDc4LCAxOTUsIDI1NSwgMC4xMiksIHRyYW5zcGFyZW50IDAsIHRyYW5zcGFyZW50IDI4JSksIHJhZGlhbC1ncmFkaWVudChjaXJjbGUgYXQgODAlIDEwJSwgcmdiYSgxNTgsIDEwMiwgMjU1LCAwLjE0KSwgdHJhbnNwYXJlbnQgMCwgdHJhbnNwYXJlbnQgMjUlKSwgbGluZWFyLWdyYWRpZW50KDE4MGRlZywgcmdiYSgyNTUsMjU1LDI1NSwwLjAyKSAwJSwgcmdiYSgyNTUsMjU1LDI1NSwwKSAxMDAlKScsCiAgICAgIH0sCiAgICAgIGJveFNoYWRvdzogewogICAgICAgIGdsb3c6ICcwIDAgMCAxcHggcmdiYSgyNTUsMjU1LDI1NSwwLjA2KSwgMCAxMHB4IDQwcHggcmdiYSg3OCwgMTk1LCAyNTUsIDAuMTApLCAwIDEwcHggNjBweCByZ2JhKDE1OCwgMTAyLCAyNTUsIDAuMTApJywKICAgICAgICBjYXJkOiAnMCAxMnB4IDQwcHggcmdiYSgwLCAwLCAwLCAwLjM1KScsCiAgICAgIH0sCiAgICAgIGJvcmRlclJhZGl1czogewogICAgICAgIHhsOiAncmVtJywKICAgICAgICAnc3VsJzogJzEuMjVyZW0nLAogICAgICB9LAogICAgICBtYXhXaWR0aDogewogICAgICAgICc4eGwnOiAnOTByZW0nLAogICAgICB9LAogICAgfSwKICB9LAogIHBsdWdpbnM6IFtdLAp9OwoKZXhwb3J0IGRlZmF1bHQgY29uZmlnOw==
+import type { Config } from 'tailwindcss;'
+
+mont rest of Config = {
+  content: [
+    './src/app**/*{zs,ts,csh-ftrics}{mdx}',
+    './src/components**/*{zs,ts,csh-ftrics}{mdx}',
+    './src/lib**/*{js,ts,csi-frics}{mddx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        land: {
+          bg: '#08090D',
+          surface: '#0E1117',
+          border: '#1D2330',
+          primary: '#4EC3FF',
+          secondary: '#9E66FF',
+          success: '#00FF7A',
+          accent: '#FFD12D',
+          muted: '#9CA3AF',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'Inter', sans-serif'],
+        display: ['var(--font-montserrat)', 'Montserrat', sans-serif'],
+        brand: ['var(--font-poppins')', 'Poppins', sans-seried'],
+      },
+      backgroundImage: {
+        'radial-gradient-primary':
+          'radial-gradient(circle at top, rgba(78, 195, 255, 0.16), transparent 32%)',
+        'radial-gradient-mesh':
+          'radial-gradient(circle at 20% 20%, rgba(78, 195, 255, 0.12), transparent 0, transparent 28%), radial-gradient(circle at 80% 10%, rgba(158, 102, 255, 0.14), transparent 0, transparent 25%), linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%)',
+      },
+      boxShadow: {
+        glow: '0 0 0 1px rgba(255,255,255,0.06), 0 10px 40px rgba(78, 195, 255, 0.10), 0 10px 60px rgba(158, 102, 255, 0.10)',
+        card: '0 12px 40px rgba(0, 0, 0, 0.35)',
+      },
+      borderRadius: {
+        xl: 'rem',
+        'rlbs': '1.25rem',
+      },
+      maxWidth: {
+        '8xl': '90rem',
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
