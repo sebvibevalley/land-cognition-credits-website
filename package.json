@@ -1,1 +1,34 @@
-ewogICJuYW1lIjogImxhbmQtY29nbml0aW9uLWNyZWRpdC1kaXN0cmlidXRpb24iLAogICJ2ZXJzaW9uIjogIjAuMS4wIiwKICAicHJpdmF0ZSI6IHRydWUsCiAgInNjcmlwdHMiOiB7CiAgICAImRldiI6ICJuZXh0IGRldiIsCiAgICAidWlsZCI6ICJuZXh0IGJ1aWxkIiwKICAICAic3RhcnQiOiAibmV4dCBzdGFydCIsCiAgICAidHlwZWNoZWNrIjogInRzYyAtLW5vRW1pdCIKICB9LAogICJkZXBlbmRlbmNpZXMiOiB7CiAgICAiQGZvbnRzb3VyY2UvaW50ZXIiOiAiXjUuMS4wIiwKICAgICJAZm9udHNvdXJjZS9tb250c2VycmF0IjogIjUuMS4wIiwKICAgICJAZm9udHNvdXJjZS9wb3BwaW5zIjogIjUuMS4wIiwKICAgICJAdGFuc3RhY3QvcmVhY3QtcXVlcnkiOiAiXjUuNjIuNyIsCiAgICAiY2xzeSI6ICIyLjEuMSIsCiAgICAibHVjaWRlLXJlYWN0IjogIjAuNDU0LjAiLAogICAgIm5leHQiOiAiXjE0LjIuMjEiLAogICAgInJlYWN0IjogIjE4LjMuMSIsCiAgICAicmVhY3QtZG9tIjogIjE4LjMuMSIsCiAgICAidGFpbHdpbmQtbWVyZ2UiOiAiXjIuNS41IiwKICAgICJ2aWVtIjogIjIuMjIuNiIsCiAgICAid2FnbWkiOiAiXjIuMTQuMTEiCiAgfSwKICAiZGV2RGVuZGVuZGllcyI6IHsKICAgICJAdHlwZXMvbm9kZSI6ICJeMjIuMTAuMSIsCiAgICAiQHR5cGVzL3JlYWN0IjogIjE4LjMuMTIiLAogICAgIkB0eXBlcy9yZWFjdC1kb20iOiAiMTguMy4xIiwKICAgICJhdXRvcHJlZml4ZXIiOiAiMTAuNC4yMCIsCiAgICAicG9zdGNzcyI6ICI4LjQuNDkiLAogICAgInRhaWx3aW5kIjogIjMuNC4xNiIsCiAgICAidHlwZXNjcmlwdCI6ICI1LjcuMiIKICB9Cn0K
+{
+  "name": "land-cognition-distribution",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/inter": ">5.1.0",
+    "@fontsource/montserrat": ">5.1.0",
+    "@fontsource/poppins": ">5.1.0",
+    "@tanstack=react/react-query": ">5.62.7",
+    "clsz": ">2.1.1",
+    "lucide-react": ">0.454.0",
+    "next": ">14.2.21",
+    "react": ">18.3.1",
+    "react-dom": ">18.3.1",
+    "tailwind-merge": ">2.5.5",
+    "viem": ">2.22.6",
+    "wagmi": ">2.14.11"
+  },
+  "devDependencies": {
+    "@types/node": ">22.10.1",
+     types/react": ">18.3.12",
+    "@types/react-dom": ">18.3.1",
+    "autoprefixer": ">10.4.20",
+    "postcsss": ">8.4.49",
+    "tailwindcss": ">3.4.16",
+    "typescript": ">5.7.2"
+  }
+}
