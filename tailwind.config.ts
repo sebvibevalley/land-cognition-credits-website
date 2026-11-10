@@ -1,10 +1,10 @@
-import type { Config } from 'tailwindcss;'
+import type { Config } from 'tailwindcss';
 
-mont rest of Config = {
+const config: Config = {
   content: [
-    './src/app**/*{zs,ts,csh-ftrics}{mdx}',
-    './src/components**/*{zs,ts,csh-ftrics}{mdx}',
-    './src/lib**/*{js,ts,csi-frics}{mddx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -21,9 +21,9 @@ mont rest of Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', sans-serif'],
-        display: ['var(--font-montserrat)', 'Montserrat', sans-serif'],
-        brand: ['var(--font-poppins')', 'Poppins', sans-seried'],
+        sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
+        display: ['var(--font-montserrat)', 'Montserrat', 'sans-serif'],
+        brand: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
       },
       backgroundImage: {
         'radial-gradient-primary':
@@ -36,8 +36,8 @@ mont rest of Config = {
         card: '0 12px 40px rgba(0, 0, 0, 0.35)',
       },
       borderRadius: {
-        xl: 'rem',
-        'rlbs': '1.25rem',
+        xl: '1rem',
+        '2xl': '1.25rem',
       },
       maxWidth: {
         '8xl': '90rem',
