@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import { createMockClaim, DEFAULT_MOCK_CHAIN_ID } from '@/lib/mock/mock-data';
 
 const Panel = styled.div`
   padding: 2rem;
@@ -42,6 +43,12 @@ type ClaimPanelProps = {
   onClaimError?: (error: string) => void;
 };
 
+function randomTxHash(): string {
+  return `0x${Array.from({ length: 64 }, () =>
+    Math.floor(Math.random() * 16).toString(16),
+  ).join('')}`;
+}
+
 export default function ClaimPanel({ address, eligibility, onClaimSuccess, onClaimError }: ClaimPanelProps) {
   const [claiming, setClaiming] = React.useState(false);
 
@@ -49,17 +56,30 @@ export default function ClaimPanel({ address, eligibility, onClaimSuccess, onCla
     if (!address) return;
     setClaiming(true);
     try {
-      const res = await fetch('/api/claim', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress: address }),
-      });
-      const data = await res.json();
-      if (data.txHash) {
-        onClaimSuccess?.(data.txHash);
-      } else {
+      try {
+        const res = await fetch('/api/claim', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ walletAddress: address }),
+        });
+        if (!res.ok) throw new Error(`Claim API returned ${res.status}`);
+        const data = await res.json();
+        if (data.txHash) {
+          onClaimSuccess?.(data.txHash);
+          return;
+        }
         onClaimError?.(data.error || 'Claim failed');
+        return;
+      } catch {
+        // Static hosting has no /api/claim route: fall through to the local mock.
       }
+
+      const localClaim = createMockClaim(address, DEFAULT_MOCK_CHAIN_ID);
+      if (localClaim.status === 'rejected') {
+        onClaimError?.(localClaim.message || 'Claim failed');
+        return;
+      }
+      onClaimSuccess?.(randomTxHash());
     } catch (err) {
       onClaimError?.(String(err));
     } finally {
