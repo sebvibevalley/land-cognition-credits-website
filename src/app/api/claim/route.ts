@@ -1,32 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createMockClaim, DEFAULT_MOCK_CHAIN_ID } from '@/lib/mock/mock-data';
-import { type ClaimResponse } from '@/lib/mock/types';
+import { NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { walletAddress, chainId = DEFAULT_MOCK_CHAIN_ID } = body;
+// Static export only supports GET route handlers, so the POST claim
+// endpoint cannot exist on the Pages deployment. The client falls back to
+// the in-memory mock claim when this route is unreachable.
+export const dynamic = 'force-static';
 
-    if (!walletAddress || typeof walletAddress !== 'string') {
-      return NextResponse.json({ error: 'walletAddress is required' }, { status: 400 });
-    }
-
-    const claimResponse: ClaimResponse = createMockClaim(walletAddress, chainId);
-
-    if (claimResponse.status === 'rejected') {
-      return NextResponse.json({ error: claimResponse.message || 'Claim rejected' }, { status: 400 });
-    }
-
-    const mockTxHash = `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`;
-
-    return NextResponse.json({
-      claimId: claimResponse.claimId,
-      status: claimResponse.status,
-      txHash: mockTxHash,
-      message: claimResponse.message,
-    });
-  } catch (error) {
-    console.error('Claim API error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
+export async function GET() {
+  return NextResponse.json({
+    status: 'static',
+    message: 'Claim submissions are not served by the static deployment.',
+  });
 }
