@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
 import Layout from '@/components/layout';
 import { useMockWallet } from '@/lib/mock/mock-wallet';
 
@@ -35,7 +36,7 @@ const ButtonGroup = styled.div`
   flex-wrap: wrap;
 `;
 
-const PrimaryButton = styled.a`
+const PrimaryButton = styled(Link)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +55,7 @@ const PrimaryButton = styled.a`
   }
 `;
 
-const SecondaryButton = styled.a`
+const SecondaryButton = styled(Link)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
