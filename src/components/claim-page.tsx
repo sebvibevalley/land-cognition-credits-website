@@ -41,8 +41,39 @@ const MockLabel = styled.span`
   letter-spacing: 0.05em;
 `;
 
+const ConnectButton = styled.button`
+  margin-top: 1rem;
+  min-height: 44px;
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e 0%, #7dd3fc 100%);
+  color: #071018;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+const ConnectedAddress = styled.code`
+  display: block;
+  margin-top: 0.75rem;
+  color: #7dd3fc;
+  font-size: 0.875rem;
+  word-break: break-all;
+`;
+
 export default function ClaimPage() {
-  const { isConnected, address } = useMockWallet();
+  const { isConnected, address, isConnecting, connect } = useMockWallet();
   const [eligibility] = useState({
     tier: 'SEED',
     creditAllocation: 500,
@@ -60,7 +91,16 @@ export default function ClaimPage() {
         {!isConnected && (
           <MockData>
             <MockLabel>Mock Mode</MockLabel>
-            <p>Connect wallet or use mock data for demonstration.</p>
+            <p>Connect the mock wallet to simulate a claim.</p>
+            <ConnectButton onClick={connect} disabled={isConnecting}>
+              {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+            </ConnectButton>
+          </MockData>
+        )}
+        {isConnected && address && (
+          <MockData>
+            <MockLabel>Connected Wallet</MockLabel>
+            <ConnectedAddress>{address}</ConnectedAddress>
           </MockData>
         )}
         <ClaimPanel
