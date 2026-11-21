@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const MOCK_ELIGIBLE_ADDRESSES: Record<string, { tier: string; landCount: number; creditAllocation: number }> = {
   '0xa1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2': {
@@ -12,6 +12,15 @@ const MOCK_ELIGIBLE_ADDRESSES: Record<string, { tier: string; landCount: number;
     creditAllocation: 500,
   },
 };
+
+const STATIC_ADDRESSES = Object.keys(MOCK_ELIGIBLE_ADDRESSES);
+
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return STATIC_ADDRESSES.map((address) => ({ address }));
+}
 
 function hashAddress(address: string): number {
   let hash = 0;
@@ -28,9 +37,11 @@ function getDefaultEligibility(address: string) {
   return { tier, landCount: (hash % 20) + 1, creditAllocation: tierAllocations[tier] };
 }
 
-export async function GET(request: NextRequest, { params }: { params: { address: string } }) {
+export async function GET(_request: Request, { params }: { params: { address: string } }) {
   const { address } = params;
-  if (!address || typeof address !== 'string') return NextResponse.json({ error: 'Address is required' }, { status: 400 });
+  if (!address || typeof address !== 'string') {
+    return NextResponse.json({ error: 'Address is required' }, { status: 400 });
+  }
   const normalizedAddress = address.toLowerCase();
   const mockData = MOCK_ELIGIBLE_ADDRESSES[normalizedAddress] || getDefaultEligibility(address);
   return NextResponse.json({
