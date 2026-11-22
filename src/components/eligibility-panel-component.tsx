@@ -11,6 +11,17 @@ const Panel = styled.div`
   background: rgba(255, 255, 255, 0.03);
 `;
 
+const DemoNotice = styled.p`
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.24);
+`;
+
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -74,6 +85,10 @@ export default function EligibilityPanel({ address }: EligibilityPanelProps) {
 
   return (
     <Panel>
+      <DemoNotice>
+        Demo data, not live eligibility. These numbers come from local mock rules
+        and are not derived from your LAND ownership or the credit contract.
+      </DemoNotice>
       <Header>
         <StatusText>Eligibility for {address}</StatusText>
         <Badge $eligible={eligibility.eligible}>
