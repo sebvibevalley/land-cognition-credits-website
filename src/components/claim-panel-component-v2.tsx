@@ -2,7 +2,6 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { createMockClaim, DEFAULT_MOCK_CHAIN_ID } from '@/lib/mock/mock-data';
 
 const Panel = styled.div`
   padding: 2rem;
@@ -43,45 +42,43 @@ type ClaimPanelProps = {
   onClaimError?: (error: string) => void;
 };
 
-function randomTxHash(): string {
-  return `0x${Array.from({ length: 64 }, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  ).join('')}`;
-}
-
-export default function ClaimPanel({ address, eligibility, onClaimSuccess, onClaimError }: ClaimPanelProps) {
+export default function ClaimPanel({
+  address,
+  eligibility,
+  onClaimSuccess,
+  onClaimError,
+}: ClaimPanelProps) {
   const [claiming, setClaiming] = React.useState(false);
 
   const handleClaim = async () => {
     if (!address) return;
     setClaiming(true);
     try {
-      try {
-        const res = await fetch('/api/claim', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ walletAddress: address }),
-        });
-        if (!res.ok) throw new Error(`Claim API returned ${res.status}`);
-        const data = await res.json();
-        if (data.txHash) {
-          onClaimSuccess?.(data.txHash);
-          return;
-        }
-        onClaimError?.(data.error || 'Claim failed');
-        return;
-      } catch {
-        // Static hosting has no /api/claim route: fall through to the local mock.
-      }
-
-      const localClaim = createMockClaim(address, DEFAULT_MOCK_CHAIN_ID);
-      if (localClaim.status === 'rejected') {
-        onClaimError?.(localClaim.message || 'Claim failed');
+      const res = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ walletAddress: address }),
+      });
+      if (!res.ok) {
+        onClaimError?.(`Claim API returned ${res.status}. No transaction was sent.`);
         return;
       }
-      onClaimSuccess?.(randomTxHash());
-    } catch (err) {
-      onClaimError?.(String(err));
+      const data: unknown = await res.json();
+      const returnedHash =
+        typeof data === 'object' && data !== null
+          ? (data as { txHash?: unknown }).txHash
+          : undefined;
+      if (typeof returnedHash === 'string' && returnedHash.length > 0) {
+        onClaimSuccess?.(returnedHash);
+        return;
+      }
+      onClaimError?.('Claim failed. No transaction was sent.');
+    } catch {
+      // Static hosting has no /api/claim route. Never synthesize a success here:
+      // a claim only counts when the server returns a real transaction hash.
+      onClaimError?.(
+        'Claim service is not live yet. No transaction was sent and no credits moved.',
+      );
     } finally {
       setClaiming(false);
     }
