@@ -46,7 +46,7 @@ const AddressInput = styled.input`
   }
 `;
 
-const MockAddressHint = styled.p`
+const AddressHint = styled.p`
   font-size: 0.875rem;
   color: #64748b;
   margin: 0 0 2rem;
@@ -62,8 +62,8 @@ export default function EligibilityPage() {
       <PageContainer>
         <PageTitle>Check Eligibility</PageTitle>
         <PageDescription>
-          Enter your wallet address to check if you're eligible for cognition
-          credits based on your LAND ownership.
+          Enter your wallet address to see how much LAND it holds on Polygon. LAND
+          ownership is what makes you eligible for cognition credits.
         </PageDescription>
         {!isConnected && (
           <AddressInput
@@ -74,10 +74,10 @@ export default function EligibilityPage() {
             aria-label="Wallet address"
           />
         )}
-        <MockAddressHint>
-          Mock mode: Try addresses like 0xA1B2...9F0E (eligible) or any other
-          address for fallback allocation.
-        </MockAddressHint>
+        <AddressHint>
+          This reads the LAND balance straight from Polygon mainnet. Paste any
+          address, no wallet connection needed.
+        </AddressHint>
         {displayAddress && (
           <EligibilityPanel address={displayAddress} />
         )}
