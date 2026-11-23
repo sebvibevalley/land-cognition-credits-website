@@ -1,8 +1,16 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getMockEligibility } from '@/lib/mock/mock-data';
+import {
+  CREDITS_NOT_LIVE_NOTE,
+  LAND_CHAIN_NAME,
+  LAND_CONTRACT_ADDRESS,
+  LAND_CONTRACT_EXPLORER_URL,
+  getLandBalance,
+  isValidAddress,
+  type LandReadResult,
+} from '@/lib/land';
 
 const Panel = styled.div`
   padding: 2rem;
@@ -11,15 +19,15 @@ const Panel = styled.div`
   background: rgba(255, 255, 255, 0.03);
 `;
 
-const DemoNotice = styled.p`
+const Notice = styled.p`
   margin: 0 0 1.5rem;
   padding: 0.75rem 1rem;
   border-radius: 10px;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.24);
+  color: #7dd3fc;
+  background: rgba(125, 211, 252, 0.08);
+  border: 1px solid rgba(125, 211, 252, 0.2);
 `;
 
 const Header = styled.div`
@@ -74,6 +82,34 @@ const Value = styled.strong`
   color: #f8fafc;
   font-size: 1rem;
   font-weight: 600;
+  text-align: right;
+  word-break: break-all;
+`;
+
+const Footnote = styled.p`
+  margin: 1.25rem 0 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  line-height: 1.6;
+`;
+
+const ErrorBox = styled.p`
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.24);
+`;
+
+const ExplorerLink = styled.a`
+  color: #7dd3fc;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 type EligibilityPanelProps = {
@@ -81,36 +117,113 @@ type EligibilityPanelProps = {
 };
 
 export default function EligibilityPanel({ address }: EligibilityPanelProps) {
-  const eligibility = useMemo(() => getMockEligibility(address), [address]);
+  const [result, setResult] = useState<LandReadResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const trimmed = address.trim();
+
+    if (!trimmed) {
+      setResult(null);
+      setError(null);
+      setLoading(false);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    if (!isValidAddress(trimmed)) {
+      setResult(null);
+      setError('That is not a valid 0x address.');
+      setLoading(false);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    getLandBalance(trimmed)
+      .then((next) => {
+        if (!cancelled) setResult(next);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : 'The Polygon read failed.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [address]);
+
+  const badgeLabel = loading
+    ? 'Reading Polygon…'
+    : result
+      ? result.eligible
+        ? 'Eligible'
+        : 'No LAND found'
+      : '—';
 
   return (
     <Panel>
-      <DemoNotice>
-        Demo data, not live eligibility. These numbers come from local mock rules
-        and are not derived from your LAND ownership or the credit contract.
-      </DemoNotice>
+      <Notice>
+        Live LAND balance, read from the Polygon chain for this address. Eligible
+        here means you hold at least one LAND. The credit number is not live yet,
+        so none is shown.
+      </Notice>
       <Header>
-        <StatusText>Eligibility for {address}</StatusText>
-        <Badge $eligible={eligibility.eligible}>
-          {eligibility.eligible ? 'Eligible' : 'Not eligible'}
-        </Badge>
+        <StatusText>LAND check for {address}</StatusText>
+        <Badge $eligible={Boolean(result?.eligible)}>{badgeLabel}</Badge>
       </Header>
-      <Row>
-        <Label>Tier</Label>
-        <Value>{eligibility.tier ?? 'SEED'}</Value>
-      </Row>
-      <Row>
-        <Label>Credits</Label>
-        <Value>{eligibility.entitlementCredits.toString()}</Value>
-      </Row>
-      <Row>
-        <Label>Activity multiplier</Label>
-        <Value>{(eligibility.activityMultiplier ?? 1).toFixed(2)}</Value>
-      </Row>
-      <Row>
-        <Label>Status</Label>
-        <Value>{eligibility.status}</Value>
-      </Row>
+      {error && <ErrorBox>{error} Nothing was assumed.</ErrorBox>}
+      {result && (
+        <>
+          <Row>
+            <Label>LAND owned</Label>
+            <Value>{result.landCount.toLocaleString()}</Value>
+          </Row>
+          <Row>
+            <Label>Tier band</Label>
+            <Value>{result.tier ?? 'none'}</Value>
+          </Row>
+          <Row>
+            <Label>Network</Label>
+            <Value>
+              {LAND_CHAIN_NAME} ({result.chainId})
+            </Value>
+          </Row>
+          <Row>
+            <Label>Contract</Label>
+            <Value>
+              <ExplorerLink
+                href={LAND_CONTRACT_EXPLORER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {LAND_CONTRACT_ADDRESS}
+              </ExplorerLink>
+            </Value>
+          </Row>
+          <Row>
+            <Label>Read at</Label>
+            <Value>
+              block {result.blockNumber !== null ? result.blockNumber.toLocaleString() : 'unknown'}
+            </Value>
+          </Row>
+        </>
+      )}
+      <Footnote>
+        Tier bands are a proposal: SEED 1+, CREATOR 10+, ESTATE 50+, WHALE 200+
+        LAND. {CREDITS_NOT_LIVE_NOTE}
+      </Footnote>
     </Panel>
   );
 }
