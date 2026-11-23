@@ -87,7 +87,12 @@ export default function ClaimPanel({
   return (
     <Panel>
       <p>Tier: {eligibility.tier}</p>
-      <p>Credits: {eligibility.creditAllocation}</p>
+      <p>
+        Credits:{' '}
+        {eligibility.creditAllocation > 0
+          ? eligibility.creditAllocation
+          : 'not set yet, the distributor contract is not deployed'}
+      </p>
       <ClaimButton onClick={handleClaim} disabled={claiming || !address}>
         {claiming ? 'Claiming...' : 'Claim Credits'}
       </ClaimButton>
