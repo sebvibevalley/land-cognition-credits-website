@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import Layout from '@/components/layout';
 import { useMockWallet } from '@/lib/mock/mock-wallet';
 import ClaimPanel from '@/components/claim-panel-component-v2';
-import { getMockEligibility } from '@/lib/mock/mock-data';
+import { getLandBalance, isValidAddress } from '@/lib/land';
 
 const PageContainer = styled.div`
   max-width: 800px;
@@ -103,31 +103,68 @@ export default function ClaimPage() {
   const { isConnected, address, isConnecting, connect } = useMockWallet();
   const [claimError, setClaimError] = useState<string | null>(null);
   const [claimTxHash, setClaimTxHash] = useState<string | null>(null);
+  const [landCount, setLandCount] = useState<number | null>(null);
+  const [landTier, setLandTier] = useState<string>('—');
+  const [landError, setLandError] = useState<string | null>(null);
 
-  const eligibility = useMemo(() => {
-    if (!address) {
-      return { tier: '—', creditAllocation: 0, status: 'wallet not connected' };
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!address || !isValidAddress(address)) {
+      setLandCount(null);
+      setLandTier('—');
+      setLandError(null);
+      return () => {
+        cancelled = true;
+      };
     }
-    const record = getMockEligibility(address);
-    return {
-      tier: record.tier ?? 'SEED',
-      creditAllocation: record.entitlementCredits,
-      status: String(record.status),
+
+    setLandError(null);
+
+    getLandBalance(address)
+      .then((read) => {
+        if (cancelled) return;
+        setLandCount(read.landCount);
+        setLandTier(read.tier ?? 'none');
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setLandError(err instanceof Error ? err.message : 'The Polygon read failed.');
+      });
+
+    return () => {
+      cancelled = true;
     };
   }, [address]);
+
+  const eligibility = useMemo(
+    () => ({
+      tier: landTier,
+      // The distributor contract is not deployed, so no credit amount exists yet.
+      creditAllocation: 0,
+      status:
+        landCount === null
+          ? 'LAND not read yet'
+          : landCount > 0
+            ? `${landCount} LAND`
+            : 'no LAND',
+    }),
+    [landTier, landCount],
+  );
 
   return (
     <Layout>
       <PageContainer>
         <PageTitle>Claim Cognition Credits</PageTitle>
         <PageDescription>
-          Claim your allocated cognition credits based on your LAND ownership
-          tier and activity.
+          Your tier comes from the LAND your wallet actually holds on Polygon.
+          Claiming opens once the credit contract is deployed.
         </PageDescription>
         <DemoNotice>
-          <strong>Demo build.</strong> Tier and credit numbers here come from
-          local mock rules, not from live LAND ownership or the credit contract.
-          A claim can only settle once the claim API and the contract are live.
+          <strong>Not live yet.</strong> The tier below is read from Polygon; the
+          credit amount is not, because the CognitionCreditDistributor contract is
+          not deployed. A claim can only settle once that contract and the claim
+          service exist, so the button will tell you plainly instead of pretending.
         </DemoNotice>
         {!isConnected && (
           <MockData>
@@ -143,6 +180,9 @@ export default function ClaimPage() {
             <MockLabel>Connected Wallet</MockLabel>
             <ConnectedAddress>{address}</ConnectedAddress>
           </MockData>
+        )}
+        {landError && (
+          <StatusBox $ok={false}>Could not read LAND from Polygon: {landError}</StatusBox>
         )}
         <ClaimPanel
           address={address}
