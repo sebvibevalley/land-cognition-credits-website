@@ -169,15 +169,19 @@ export default function ClaimPage() {
         {!isConnected && (
           <MockData>
             <MockLabel>Wallet</MockLabel>
-            <p>Connect the demo wallet to walk through the claim flow.</p>
+            <p>
+              Connect the demo wallet to walk through the claim flow. It is a
+              fixed test address, not your own wallet. To check the LAND on any
+              address you like, use the eligibility page.
+            </p>
             <ConnectButton onClick={connect} disabled={isConnecting}>
-              {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+              {isConnecting ? 'Connecting...' : 'Connect demo wallet'}
             </ConnectButton>
           </MockData>
         )}
         {isConnected && address && (
           <MockData>
-            <MockLabel>Connected Wallet</MockLabel>
+            <MockLabel>Demo wallet address</MockLabel>
             <ConnectedAddress>{address}</ConnectedAddress>
           </MockData>
         )}
