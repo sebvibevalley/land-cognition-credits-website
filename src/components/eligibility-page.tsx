@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Layout from '@/components/layout';
-import { useMockWallet } from '@/lib/mock/mock-wallet';
 import EligibilityPanel from '@/components/eligibility-panel-component';
 
 const PageContainer = styled.div`
@@ -52,10 +51,11 @@ const AddressHint = styled.p`
   margin: 0 0 2rem;
 `;
 
+// The field is always on screen. A previously stored demo-wallet connection
+// used to hide it, so a returning visitor could not check any other address.
 export default function EligibilityPage() {
-  const { isConnected, address: connectedAddress } = useMockWallet();
   const [manualAddress, setManualAddress] = useState('');
-  const displayAddress = isConnected ? connectedAddress : manualAddress;
+  const trimmedAddress = manualAddress.trim();
 
   return (
     <Layout>
@@ -65,22 +65,20 @@ export default function EligibilityPage() {
           Enter your wallet address to see how much LAND it holds on Polygon. LAND
           ownership is what makes you eligible for cognition credits.
         </PageDescription>
-        {!isConnected && (
-          <AddressInput
-            type="text"
-            placeholder="0x..."
-            value={manualAddress}
-            onChange={(e) => setManualAddress(e.target.value)}
-            aria-label="Wallet address"
-          />
-        )}
+        <AddressInput
+          type="text"
+          placeholder="0x..."
+          value={manualAddress}
+          onChange={(e) => setManualAddress(e.target.value)}
+          aria-label="Wallet address"
+          autoComplete="off"
+          spellCheck={false}
+        />
         <AddressHint>
           This reads the LAND balance straight from Polygon mainnet. Paste any
           address, no wallet connection needed.
         </AddressHint>
-        {displayAddress && (
-          <EligibilityPanel address={displayAddress} />
-        )}
+        {trimmedAddress && <EligibilityPanel address={trimmedAddress} />}
       </PageContainer>
     </Layout>
   );
