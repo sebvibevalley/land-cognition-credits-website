@@ -4,8 +4,9 @@ import type { EntitlementTier } from '@/lib/mock/types';
  * Live LAND ownership reads.
  *
  * Contract verified on-chain 2026-11-23: name() = "Sandbox's LANDS",
- * symbol() = "LAND", ERC-721 on Polygon PoS. Address taken from the
- * verified read, not from memory.
+ * symbol() = "LAND", ERC-721 on Polygon PoS. Address taken from a verified
+ * on-chain read, not from memory. balanceOf() answers with a clean 32-byte
+ * word for addresses that hold none, so the selector is live on this proxy.
  *
  * Everything here is a real read against Polygon. Nothing is derived from a
  * hash of the address, and no credit number is invented: the allocation lives
@@ -17,8 +18,20 @@ export const LAND_CHAIN_ID = 137;
 export const LAND_CHAIN_NAME = 'Polygon';
 export const LAND_CONTRACT_EXPLORER_URL = `https://polygonscan.com/token/${LAND_CONTRACT_ADDRESS}`;
 
-const DEFAULT_RPC_URL = 'https://polygon-rpc.com';
-const RPC_URL = process.env.NEXT_PUBLIC_POLYGON_RPC_URL || DEFAULT_RPC_URL;
+/**
+ * Public endpoints, tried in order. Verified reachable 2026-11-23.
+ * polygon-rpc.com is deliberately absent: it now answers 401 "tenant disabled".
+ */
+const PUBLIC_RPC_URLS = [
+  'https://polygon-bor-rpc.publicnode.com',
+  'https://1rpc.io/matic',
+  'https://polygon.drpc.org',
+];
+
+function rpcUrls(): string[] {
+  const configured = process.env.NEXT_PUBLIC_POLYGON_RPC_URL;
+  return configured ? [configured, ...PUBLIC_RPC_URLS] : PUBLIC_RPC_URLS;
+}
 
 export const TIER_BANDS: ReadonlyArray<{ tier: EntitlementTier; minLand: number }> = [
   { tier: 'WHALE', minLand: 200 },
@@ -60,8 +73,8 @@ function hexToNumber(value: string): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-async function rpc<T>(method: string, params: unknown[]): Promise<T> {
-  const response = await fetch(RPC_URL, {
+async function rpcOnce<T>(url: string, method: string, params: unknown[]): Promise<T> {
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
@@ -77,6 +90,18 @@ async function rpc<T>(method: string, params: unknown[]): Promise<T> {
     throw new Error('Polygon RPC returned no result');
   }
   return payload.result;
+}
+
+async function rpc<T>(method: string, params: unknown[]): Promise<T> {
+  let lastError: Error | null = null;
+  for (const url of rpcUrls()) {
+    try {
+      return await rpcOnce<T>(url, method, params);
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error('Polygon RPC call failed');
+    }
+  }
+  throw lastError ?? new Error('No Polygon RPC endpoint answered');
 }
 
 export async function getLandBalance(address: string): Promise<LandReadResult> {
