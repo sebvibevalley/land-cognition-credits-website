@@ -8,7 +8,8 @@ export const metadata: Metadata = {
     default: 'LAND Cognition Credit Claim Portal',
     template: '%s | LAND Cognition Credit Claim Portal',
   },
-  description: 'Mock frontend for checking eligibility and claiming LAND Cognition Credits.',
+  description:
+    'Check your LAND ownership on Polygon and see eligibility for LAND Cognition Credits. Credit amounts come from a distributor contract that is not live yet.',
 };
 
 type RootLayoutProps = Readonly<{ children: ReactNode }>;
