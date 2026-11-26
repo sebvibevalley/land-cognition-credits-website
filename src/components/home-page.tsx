@@ -114,8 +114,9 @@ export default function HomePage() {
       <HeroSection>
         <Title>LAND Cognition Credits</Title>
         <Subtitle>
-          Claim your allocated cognition credits based on LAND ownership.
-          Secure, transparent, and engineering-focused credit claim workflows.
+          Check whether the LAND you hold on Polygon counts toward cognition
+          credits. Credit amounts come from a distributor contract that is not
+          live yet, so right now this site shows eligibility only.
         </Subtitle>
         <ButtonGroup>
           <PrimaryButton href="/eligibility">Check Eligibility</PrimaryButton>
@@ -125,17 +126,19 @@ export default function HomePage() {
       <FeaturesSection>
         <FeaturesGrid>
           <FeatureCard>
-            <FeatureTitle>Transparent Allocation</FeatureTitle>
+            <FeatureTitle>Live Eligibility</FeatureTitle>
             <FeatureDescription>
-              Credits are allocated based on LAND ownership tier and activity,
-              with deterministic formulas and verifiable on-chain proofs.
+              Eligibility reads your LAND balance straight from the Polygon
+              contract, so you can check any address without connecting a
+              wallet.
             </FeatureDescription>
           </FeatureCard>
           <FeatureCard>
-            <FeatureTitle>Secure Claim Process</FeatureTitle>
+            <FeatureTitle>Claiming Is Not Open Yet</FeatureTitle>
             <FeatureDescription>
-              Claim credits with wallet signature verification and idempotent
-              transaction handling. No double-claims possible.
+              The distributor contract that fixes credit amounts has not been
+              deployed. Until it is, the claim page is a labelled walkthrough
+              and sends no transaction.
             </FeatureDescription>
           </FeatureCard>
           <FeatureCard>
