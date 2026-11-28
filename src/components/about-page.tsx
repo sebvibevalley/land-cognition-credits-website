@@ -35,6 +35,17 @@ const Paragraph = styled.p`
   line-height: 1.7;
 `;
 
+const Notice = styled.p`
+  font-size: 1rem;
+  color: #f8fafc;
+  margin: 0 0 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(125, 211, 252, 0.24);
+  background: rgba(125, 211, 252, 0.1);
+  line-height: 1.6;
+`;
+
 const List = styled.ul`
   color: #94a3b8;
   padding-left: 1.5rem;
@@ -57,21 +68,30 @@ export default function AboutPage() {
       <PageContainer>
         <PageTitle>About LAND Cognition Credits</PageTitle>
         <Section>
+          <Notice>
+            Status: eligibility only. Checking your LAND balance works today and
+            reads the Polygon contract directly. The credit amount and the claim
+            route depend on a distributor contract that has not been deployed, so
+            no credit number shown here is final and no claim sends a transaction.
+          </Notice>
+        </Section>
+        <Section>
           <SectionTitle>What are Cognition Credits?</SectionTitle>
           <Paragraph>
-            Cognition Credits are digital tokens allocated to LAND owners in the
-            Sandbox ecosystem. They represent a share of the cognition resources
+            Cognition Credits are meant to be tokens granted to LAND owners in the
+            Sandbox ecosystem, representing a share of the cognition resources
             available for AI-powered experiences within LAND parcels.
           </Paragraph>
           <Paragraph>
-            Credits are allocated based on a deterministic formula that considers
-            your LAND ownership tier, activity level, and the emission curve schedule.
+            The intent is to allocate them on a deterministic formula built from
+            LAND ownership tier, activity level, and an emission curve schedule.
+            That formula is a design, not yet a deployed contract.
           </Paragraph>
         </Section>
         <Section>
-          <SectionTitle>Allocation Formula</SectionTitle>
+          <SectionTitle>Proposed allocation formula</SectionTitle>
           <Paragraph>
-            Credits are calculated using the following formula:
+            The current working design is:
           </Paragraph>
           <Paragraph>
             <Highlight>credits = baseAllocation × activityMultiplier × tierWeight × decayFactor^iterations</Highlight>
@@ -82,25 +102,35 @@ export default function AboutPage() {
             <ListItem><Highlight>tierWeight:</Highlight> Weight for your LAND ownership tier (SEED, CREATOR, ESTATE, WHALE)</ListItem>
             <ListItem><Highlight>decayFactor:</Highlight> Emission curve decay over time</ListItem>
           </List>
+          <Paragraph>
+            None of these terms are readable on-chain today. They will live in the
+            distributor contract, and until it ships the eligibility page labels any
+            illustrative numbers as demo data.
+          </Paragraph>
         </Section>
         <Section>
-          <SectionTitle>Claim Process</SectionTitle>
+          <SectionTitle>How claiming will work</SectionTitle>
           <Paragraph>
-            The claim process is designed to be secure, transparent, and idempotent:
+            Once the distributor is deployed, the flow is intended to be:
           </Paragraph>
           <List>
-            <ListItem>Connect your wallet to verify LAND ownership</ListItem>
+            <ListItem>Connect your wallet to prove LAND ownership</ListItem>
             <ListItem>Review your eligibility and credit allocation</ListItem>
             <ListItem>Sign a message to authorize the claim</ListItem>
             <ListItem>Receive credits directly to your wallet</ListItem>
           </List>
+          <Paragraph>
+            Right now none of that is live. The claim page is a labelled walkthrough
+            and sends nothing.
+          </Paragraph>
         </Section>
         <Section>
-          <SectionTitle>Technical Architecture</SectionTitle>
+          <SectionTitle>Technical architecture</SectionTitle>
           <Paragraph>
-            The system is built with minimal surfaces and clear entitlement boundaries.
-            All allocations are verifiable through on-chain proofs and deterministic formulas.
-            No central authority can modify your allocation.
+            The build is deliberately small: eligibility reads LAND balanceOf on
+            Polygon through a public RPC, and the site stays a static export. The
+            entitlement boundaries and the link between LAND metadata and cognition
+            services will live in the distributor contract once it exists.
           </Paragraph>
         </Section>
       </PageContainer>
