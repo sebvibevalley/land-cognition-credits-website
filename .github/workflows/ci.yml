@@ -1,10 +1,16 @@
 name: LAND site build check
 
+# BRANCH-LOCAL ONLY: this file exists on copy/deploy-pages-surgical so that a push
+# to this branch runs the build proof. Only src/components/home-page.tsx and
+# src/components/about-page.tsx are meant to travel to deploy/pages. Never merge
+# this workflow change into deploy/pages.
+
 on:
   push:
     branches:
       - fix/build-defects
       - main
+      - copy/deploy-pages-surgical
     paths-ignore:
       - '**/package-lock.json'
   workflow_dispatch:
@@ -38,15 +44,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Commit resolved lockfile
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          if git diff --staged --quiet; then
-            echo "package-lock.json unchanged"
-          else
-            git commit -m "chore: add package-lock.json resolved by CI"
-            git push origin HEAD:${{ github.ref_name }}
-          fi
